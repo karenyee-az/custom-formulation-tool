@@ -1,0 +1,40 @@
+import streamlit as st
+import pandas as pd
+
+def generate_formulation(selected_actives, selected_emollients, selected_thickeners, selected_humectants):
+    base_formulation = [
+        {"Phase": "A", "Ingredient": "Water (Aqua)", "Function": "Base Solvent", "Typical Usage (%)": "50-60%"},
+        {"Phase": "A", "Ingredient": "Glycerin", "Function": "Humectant", "Typical Usage (%)": "3-5%"},
+        {"Phase": "A", "Ingredient": "Preservative (Phenoxyethanol + Ethylhexylglycerin)", "Function": "Preservative System", "Typical Usage (%)": "0.5-1%"}
+    ]
+    
+    for emollient in selected_emollients:
+        base_formulation.append({"Phase": "B", "Ingredient": emollient, "Function": "Emollient", "Typical Usage (%)": "5-10%"})
+    
+    for thickener in selected_thickeners:
+        base_formulation.append({"Phase": "C", "Ingredient": thickener, "Function": "Thickener", "Typical Usage (%)": "0.5-2%"})
+    
+    for humectant in selected_humectants:
+        base_formulation.append({"Phase": "C", "Ingredient": humectant, "Function": "Humectant", "Typical Usage (%)": "1-3%"})
+    
+    for active in selected_actives:
+        base_formulation.append({"Phase": "D", "Ingredient": active, "Function": "Active Ingredient", "Typical Usage (%)": "0.5-5%"})
+    
+    return pd.DataFrame(base_formulation)
+
+st.title("Custom Skincare Formulation Generator")
+
+actives = ["Niacinamide", "Retinol", "Vitamin C", "Peptides", "Bakuchiol", "Hyaluronic Acid"]
+emollients = ["Squalane", "Shea Butter", "Dimethicone", "Caprylic/Capric Triglycerides"]
+thickeners = ["Xanthan Gum", "Carbomer", "Hydroxyethylcellulose"]
+humectants = ["Sodium PCA", "Panthenol", "Beta-Glucan"]
+
+selected_actives = st.multiselect("Select Actives", actives)
+selected_emollients = st.multiselect("Select Emollients", emollients)
+selected_thickeners = st.multiselect("Select Thickeners", thickeners)
+selected_humectants = st.multiselect("Select Humectants", humectants)
+
+if st.button("Generate Formulation"):
+    formulation_df = generate_formulation(selected_actives, selected_emollients, selected_thickeners, selected_humectants)
+    st.write("### Your Custom Formulation:")
+    st.dataframe(formulation_df)
